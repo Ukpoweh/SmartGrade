@@ -17,9 +17,9 @@ st.set_page_config(page_title="SmartGrade", page_icon=":book:")
 
 
 load_dotenv(".env")
-#fetched_api_key = st.secrets["API_KEY"]
-#ggi.configure(api_key=fetched_api_key)
-#llm_model = ggi.GenerativeModel("gemini-pro")
+fetched_api_key = st.secrets["API_KEY"]
+ggi.configure(api_key=fetched_api_key)
+llm_model = ggi.GenerativeModel("gemini-pro")
 
 
 jamb_model = pickle.load(open('jamb_model.pkl', 'rb'))
@@ -62,16 +62,11 @@ def main():
     st.image("books.jpg")
     st.subheader("A Grade Prediction System")
 
-    st.markdown("**Hi, Scholar, Welcome to SmartGrade!, a credit card approval prediction system offering a valuable solution to both credit card applicants and issuing institutions, leveraging Data Science and Machine Learning techniques to streamline the application process, improve approval rates, as well as enhance financial well-being.**")
+    st.markdown("**Hi, Scholar!, Welcome to your personalized grade prediction app, designed to help you take control of your academic journey. Using advanced algorithms, this tool analyzes your performance to predict your final exam grades, giving you valuable insights into your strengths and areas for improvement.**")
     st.sidebar.markdown("""
-    ### Key Features:
-    - **Real-Time Credit Approval Prediction**: Instantly predicts the likelihood of credit card approval based on applicant data.
-    - **Personalized Recommendations**: Offers actionable advice for improving creditworthiness if the application is likely to be rejected.
-    - **User-Friendly Interface**: Provides an intuitive web-based interface built with Streamlit for easy data input and feedback.
-    - **Machine Learning Integration**: Utilizes advanced machine learning algorithms to ensure accurate and reliable predictions.
-    - **Continuous Monitoring and Updates**: Regularly monitors performance and updates the model to maintain and enhance accuracy.
+   Are you a final year secondary school student preparing for your final exams (WASSCE, JAMB, and NECO), SmartGrade is here for you! Introducing our innovative web app designed to empower students by predicting their grades in final exams with precision. Tailored specifically for secondary school students, the app leverages data-driven algorithms to analyze performance trends, offering personalized grade forecasts. This tool helps students set realistic goals, identify areas needing improvement, and better prepare for their final exams, ensuring they stay on track for academic success.
     """)
-    st.sidebar.markdown("**Data source can be found on [Kaggle](https://www.kaggle.com/code/hajarlbhyry/credit-card-approval-prediction99-acc-99)**")
+    st.sidebar.markdown("**Built by The Data Squad**")
     
     #input prompts
     st.write(" ")
@@ -160,7 +155,7 @@ def main():
         for prob in pred[:, :]:
             prob_list.append(prob * 100)
             result = list(prob_list[0])
-            results_df = pd.DataFrame({"Score Range":["Less than 200", "Between 200 and 270", "280 and above"], "Probability(%)": result})
+            results_df = pd.DataFrame({"Score Range":["Less than 200", "Between 200 and 270", "270 and above"], "Probability(%)": result})
             return results_df
 
     def waec_predict(model, features):
@@ -174,7 +169,6 @@ def main():
 
     jamb_prediction = jamb_predict(jamb_model, scaled_features)
     waec_prediction = waec_predict(waec_model, scaled_features)
-    #approved_prob = np.round((prediction[:, 1] * 100), 2)[0]
 
     #response = llm_model.generate_content(["A model predicted that the probability for my credit card approval is {approved_prob}%, give me personalized recommendations on how to improve it. Start with: Here's how you can improve your credit card approval probability;"], stream=True)
     #response.resolve()
@@ -183,12 +177,10 @@ def main():
         if st.button('Predict your JAMB score'):
             st.success("Here are your predictions")
             st.dataframe(jamb_prediction, hide_index=True)
-        #st.success(output)
     with col26: 
         if st.button('Predict your WAEC score'):
             st.success("Here are your predictions")
             st.dataframe(waec_prediction, hide_index=True)
-            #st.markdown(response.text)
 
 if __name__ == "__main__":
     main()
