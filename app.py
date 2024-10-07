@@ -14,8 +14,6 @@ import google.generativeai as ggi
 
 st.set_page_config(page_title="SmartGrade", page_icon=":book:")
 
-
-
 load_dotenv(".env")
 fetched_api_key = st.secrets["API_KEY"]
 ggi.configure(api_key=fetched_api_key)
@@ -102,7 +100,7 @@ def main():
     with col9:
         learning_resources_opt  = st.radio("Are learning resources (books, internet, laboratories, and tutorials) readily available to you?", learning_resources)
     with col10:
-        learning_environment_opt = st.radio("How comfortable is your classroom environment for learning on a scale of 1-5?", learning_environment)
+        learning_environment_opt = st.radio("How comfortable is your classroom environment for learning on a scale of 1-5?", ["5", "4", "3", "2", "1"])
     
     col11, col12 = st.columns([1,1])
     with col11:
@@ -170,8 +168,25 @@ def main():
     jamb_prediction = jamb_predict(jamb_model, scaled_features)
     waec_prediction = waec_predict(waec_model, scaled_features)
 
-    #response = llm_model.generate_content(["A model predicted that the probability for my credit card approval is {approved_prob}%, give me personalized recommendations on how to improve it. Start with: Here's how you can improve your credit card approval probability;"], stream=True)
-    #response.resolve()
+    jamb_pred = ""
+    if jamb_model.predict(scaled_features) == 0:
+        jamb_pred = "less than 200"
+    elif jamb_model.predict(scaled_features) == 1:
+        jamb_pred = "betwween 200 and 270"
+    elif jamb_model.predict(scaled_features) == 2:
+        jamb_pred = "above 270"
+
+    waec_pred = ""
+    if waec_model.predict(scaled_features) == 0:
+        jamb_pred = "5 credits and above"
+    elif waec_model.predict(scaled_features) == 1:
+        jamb_pred = "less than 5 credits"
+
+    prompt = f"This grade prediction model says my JAMB score will be {jamb_pred}, it also said I'll have {waec_pred} in my upcoming WASSCE. Any tips for me as a final year secondary school student to make me pass my JAMB and WASSCE exceptionally well. Start with; Hello Scholar, ..."
+    response = llm_model.generate_content(prompt, stream=True)
+    response.resolve()
+
+
     col25,col26 = st.columns([1,1])
     with col25:
         if st.button('Predict your JAMB score'):
@@ -181,6 +196,10 @@ def main():
         if st.button('Predict your WAEC score'):
             st.success("Here are your predictions")
             st.dataframe(waec_prediction, hide_index=True)
+
+
+    if st.button("Generate recommendations"):
+        st.markdown(response.text)
 
 if __name__ == "__main__":
     main()
