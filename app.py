@@ -182,7 +182,7 @@ def main():
     elif waec_model.predict(scaled_features) == 1:
         jamb_pred = "less than 5 credits"
 
-    prompt = f"This grade prediction model says my JAMB score will be {jamb_pred}, it also said I'll have {waec_pred} in my upcoming WASSCE. Any tips for me as a final year secondary school student to make me pass my JAMB and WASSCE exceptionally well. Start with; Hello Scholar, ..."
+    prompt = f"This grade prediction model says my JAMB score will be {jamb_pred}, it also said I'll have {waec_pred} in my upcoming WASSCE. Any tips for me as a final year secondary school student to make me pass my final exams exceptionally well. Start with; Hello Scholar, ..."
     response = llm_model.generate_content(prompt, stream=True)
     response.resolve()
 
@@ -198,7 +198,7 @@ def main():
             st.dataframe(waec_prediction, hide_index=True)
 
 
-    if st.button("Generate recommendations"):
+    if st.button("Get tips on acing your final exams"):
         st.markdown(response.text)
 
 if __name__ == "__main__":
