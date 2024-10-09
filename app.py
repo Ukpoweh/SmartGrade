@@ -129,7 +129,7 @@ def main():
         learning_style_opt = st.radio("What is your preferred learning style?", ["Visual", "Auditory", "Reading/Writing", "Kinesthetic"])
     col21, col22 = st.columns([1,1])
     with col21:
-        preparatory_cbt_opt = st.radio("How many preparatory CBTs have you taken?", ["1-2", "None", "3-5", "More than 5"])
+        preparatory_cbt_opt = st.radio("How many preparatory CBTs have you taken?", ["1-2", "Zero", "3-5", "More than 5"])
     with col22:
         extra_lessons_opt = st.radio("How often do you take extra lessons in a week?", extra_lessons)
     col23, col24 = st.columns([1,1])
